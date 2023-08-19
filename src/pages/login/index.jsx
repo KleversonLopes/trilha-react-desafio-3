@@ -1,4 +1,4 @@
-import { useNavigate  } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { MdEmail, MdLock } from 'react-icons/md'
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
@@ -7,11 +7,9 @@ import { api } from '../../services/api';
 
 import { useForm } from "react-hook-form";
 
-
 import { Container, Title, Column, TitleLogin, SubtitleLogin, EsqueciText, CriarText, Row, Wrapper } from './styles';
 
 const Login = () => {
-
     const navigate = useNavigate()
 
     const { control, handleSubmit, formState: { errors  } } = useForm({
@@ -23,7 +21,7 @@ const Login = () => {
         try{
             const {data} = await api.get(`/users?email=${formData.email}&senha=${formData.senha}`);
             
-            if(data.length && data[0].id){
+            if (data.length && data[0].id) {
                 navigate('/feed') 
                 return
             }
@@ -31,10 +29,11 @@ const Login = () => {
             alert('Usuário ou senha inválido')
         }catch(e){
             //TODO: HOUVE UM ERRO
+            alert(`Erro ao fazer login\n${e}`)
         }
     };
 
-    console.log('errors', errors);
+    console.log(`errors ${errors}`);
 
     return (<>
         <Header />
@@ -45,19 +44,21 @@ const Login = () => {
             </Column>
             <Column>
                 <Wrapper>
-                <TitleLogin>Faça seu cadastro</TitleLogin>
-                <SubtitleLogin>Faça seu login e make the change._</SubtitleLogin>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Input placeholder="E-mail" leftIcon={<MdEmail />} name="email"  control={control} />
-                    {errors.email && <span>E-mail é obrigatório</span>}
-                    <Input type="password" placeholder="Senha" leftIcon={<MdLock />}  name="senha" control={control} />
-                    {errors.senha && <span>Senha é obrigatório</span>}
-                    <Button title="Entrar" variant="secondary" type="submit"/>
-                </form>
-                <Row>
-                    <EsqueciText>Esqueci minha senha</EsqueciText>
-                    <CriarText>Criar Conta</CriarText>
-                </Row>
+                    <TitleLogin>Faça seu cadastro</TitleLogin>
+                    <SubtitleLogin>Faça seu login e make the change._</SubtitleLogin>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Input placeholder="E-mail" leftIcon={<MdEmail />} name="email"  control={control} />
+                        {errors.email && <span>E-mail é obrigatório</span>}
+                        <Input type="password" placeholder="Senha" leftIcon={<MdLock />}  name="senha" control={control} />
+                        {errors.senha && <span>Senha é obrigatório</span>}
+                        <Button title="Entrar" variant="secondary" type="submit"/>
+                    </form>
+                    <Row>
+                        <EsqueciText>Esqueci minha senha</EsqueciText>
+                        <Link to='/signUp'>
+                            <CriarText>Criar Conta</CriarText>
+                        </Link>
+                    </Row>
                 </Wrapper>
             </Column>
         </Container>
